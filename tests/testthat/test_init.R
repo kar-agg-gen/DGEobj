@@ -12,11 +12,17 @@ test_that('init.R: initDGEobj()', {
                        GeneModel = "Ensembl.R84")
 
     # checking warning as Grange object is not available.
-    expect_warning({test_DgeObj <- initDGEobj(counts     = counts,
-                                             rowData    = rowData,
-                                             colData    = colData,
-                                             level      = level,
-                                             customAttr = customAttr)},
+    test_DgeObj <- initDGEobj(counts     = counts,
+                                              rowData    = rowData,
+                                              colData    = colData,
+                                              level      = level,
+                                              customAttr = customAttr)
+
+    expect_warning(initDGEobj(counts     = counts,
+                                              rowData    = rowData,
+                                              colData    = colData,
+                                              level      = level,
+                                              customAttr = customAttr),
                    "Couldn't build a GRanges object")
     # verifying class
     expect_s3_class(test_DgeObj, "DGEobj")
