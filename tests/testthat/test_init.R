@@ -1,16 +1,14 @@
 context("DGEobj - tests for init.R functions")
 
 
-test_that('init.R: initDGEobj', {
+test_that('init.R: initDGEobj()', {
 
     # collect data from test object to initialize new DGEobj
     counts     <- getItem(DGEobj, "intensity_orig")
     rowData    <- getItem(DGEobj, "peptideAnnotation_orig")
     colData    <- getItem(DGEobj, "design_orig")
     level      <- "gene" # peptide level is not available
-    customAttr <- list(PID       = "20201015-0001",
-                       XpressID  = "12345",
-                       Genome    = "Mouse.B38",
+    customAttr <- list(Genome    = "Mouse.B38",
                        GeneModel = "Ensembl.R84")
 
     # checking warning as Grange object is not available.
