@@ -16,9 +16,7 @@ test_that('init.R: initDGEobj()', {
                                               rowData    = rowData,
                                               colData    = colData,
                                               level      = level,
-                                              customAttr = customAttr)},
-                                regexp = "Couldn't build a GRanges object!",
-                                fixed  = TRUE)
+                                              customAttr = customAttr)})
     # verifying class
     expect_s3_class(test_DgeObj, "DGEobj")
     expect_type(attributes(test_DgeObj), "list")
