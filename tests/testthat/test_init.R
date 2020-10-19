@@ -13,27 +13,31 @@ test_that('init.R: initDGEobj()', {
 
     # capturing warnings with withCallinghandlers. Getting extra warning in R version >= 4.0.
     # because matrix objects now also inherit from class "array" which triggers the init.R
-
-    initDGEobj_Warnings <- character(0)
-    withCallingHandlers({test_DgeObj <- initDGEobj(counts     = counts,
-                                                   rowData    = rowData,
-                                                   colData    = colData,
-                                                   level      = level,
-                                                   customAttr = customAttr)},
-                        warning = function(w) {
-                            initDGEobj_Warnings <<- c(initDGEobj_Warnings, conditionMessage(w))
-                            invokeRestart("muffleWarning")
-                        })
-
-    expect_gte(length(initDGEobj_Warnings), 1)
-
-    # checking warnings.
-    if (length(initDGEobj_Warnings) == 2) {
-        # warning when matrix inherits two classes
-        expect_true(any(grepl("the condition has length > 1 and only the first element will be used", initDGEobj_Warnings, fixed = TRUE)))
-    }
-    # warning as GRanges object is not available.
-    expect_true(any(grepl("Couldn't build a GRanges object!", initDGEobj_Warnings, fixed = TRUE )))
+    expect_warning({test_DgeObj <- initDGEobj(counts     = counts,
+                                              rowData    = rowData,
+                                              colData    = colData,
+                                              level      = level,
+                                              customAttr = customAttr)})
+    # initDGEobj_Warnings <- character(0)
+    # withCallingHandlers({test_DgeObj <- initDGEobj(counts     = counts,
+    #                                                rowData    = rowData,
+    #                                                colData    = colData,
+    #                                                level      = level,
+    #                                                customAttr = customAttr)},
+    #                     warning = function(w) {
+    #                         initDGEobj_Warnings <<- c(initDGEobj_Warnings, conditionMessage(w))
+    #                         invokeRestart("muffleWarning")
+    #                     })
+    #
+    # expect_gte(length(initDGEobj_Warnings), 1)
+    #
+    # # checking warnings.
+    # if (length(initDGEobj_Warnings) == 2) {
+    #     # warning when matrix inherits two classes
+    #     expect_true(any(grepl("the condition has length > 1 and only the first element will be used", initDGEobj_Warnings, fixed = TRUE)))
+    # }
+    # # warning as GRanges object is not available.
+    # expect_true(any(grepl("Couldn't build a GRanges object!", initDGEobj_Warnings, fixed = TRUE )))
 
     # verifying class
     expect_s3_class(test_DgeObj, "DGEobj")
