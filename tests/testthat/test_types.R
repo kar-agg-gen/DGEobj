@@ -8,7 +8,9 @@ test_that('types.R: baseType()', {
 
     expect_equivalent(baseType(DGEobj, "counts"), "assay")
 
-    expect_error(baseType(DGEobj, "dog"))
+    expect_error(baseType(DGEobj, "dog"),
+                 regexp = "subscript out of bounds",
+                 fixed  = TRUE)
 })
 
 test_that('types.R: baseTypes()', {
@@ -27,15 +29,29 @@ test_that('types.R: showTypes()', {
     # expect_equal(length(showTypes_notPretty_DGEobj), 50)
 })
 
-test_that('types.R: incorrect usage', {
-    showTypes_DGEobj <- showTypes(DGEobj)
-    expect_s3_class(showTypes_DGEobj, "knitr_kable")
-    expect_equal(length(showTypes_DGEobj), 50)
+test_that('types.R: newType()', {
+    newType_DGEobj <- newType(DGEobj, "MyType", "meta")
+    expect_true("MyType" %in% names(attr(newType_DGEobj, "objDef")$type))
+    expect_equal(attr(newType_DGEobj, "objDef")$type[["MyType"]], "meta")
+    expect_false("MyType" %in% attr(newType_DGEobj, "objDef")$uniqueType)
 
-    showTypes_notPretty_DGEobj <- showTypes(DGEobj, pretty = FALSE)
-    expect_null(showTypes_notPretty_DGEobj) # investigate this behavior
-
-    expect_error(DGEobj::showTypes(DGeobj))
-    expect_error(DGEobj::showTypes())
+    newType_DGEobj <- newType(DGEobj, "MyType", "assay", uniqueItem = TRUE)
+    expect_true("MyType" %in% names(attr(newType_DGEobj, "objDef")$type))
+    expect_equal(attr(newType_DGEobj, "objDef")$type[["MyType"]], "assay")
+    expect_true("MyType" %in% attr(newType_DGEobj, "objDef")$uniqueType)
 })
 
+test_that('types.R: incorrect usage', {
+    expect_error(showTypes(),
+                 regexp = "argument \"dgeObj\" is missing, with no default",
+                 fixed  = TRUE)
+    expect_error(newType(),
+                 regexp = "!missing(dgeObj) is not TRUE",
+                 fixed  = TRUE)
+    expect_error(newType(DGEobj),
+                 regexp = "!missing(itemType) is not TRUE",
+                 fixed  = TRUE)
+    expect_error(newType(DGEobj, "MyType", "badType"),
+                 regexp = "`%in%`(x = baseType, table = baseTypes(dgeObj)) is not TRUE",
+                 fixed  = TRUE)
+})

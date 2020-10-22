@@ -9,10 +9,18 @@ test_that('annotate.R: annotateDGEobj()', {
     expect_equal(getAttribute(ann_DGEobj, 'key1'), "'value 1'")
     expect_equal(getAttribute(ann_DGEobj, 'key2'), 'value 2')
     expect_null(getAttribute(ann_DGEobj, 'key3'))
+
+    ann_DGEobj <- annotateDGEobj(DGEobj, ann.file, keys = list("key2"))
+    expect_null(getAttribute(ann_DGEobj, 'key1'))
+    expect_equal(getAttribute(ann_DGEobj, 'key2'), 'value 2')
 })
 
 test_that('annotate.R: incorrect usage', {
-    expect_error(annotateDGEobj(DGEobj))
-    expect_error(annotateDGEobj(DGEobj, NULL))
-    expect_error(annotateDGEobj(DGEobj, "nonexistantfile.txt"))
+    expect_error(annotateDGEobj(DGEobj),
+                 regexp = "argument \"regfile\" is missing, with no default",
+                 fixed  = TRUE)
+    expect_error(annotateDGEobj(DGEobj, NULL),
+                 regexp = "invalid 'file' argument")
+    expect_error(annotateDGEobj(DGEobj, "nonexistantfile.txt"),
+                 regexp = "Path 'nonexistantfile.txt' does not exist")
 })
