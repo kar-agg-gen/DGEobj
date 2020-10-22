@@ -10,9 +10,43 @@ test_that('init.R: initDGEobj()', {
     level      <- "gene" # peptide level is not available
     customAttr <- list(Genome    = "Mouse.B38",
                        GeneModel = "Ensembl.R84")
+    # create data frame with different row names
+    rowData1   <- rowData
+    colData1   <- colData
+    rownames(rowData1) <- paste0("new_", rownames(rowData))
+    rownames(colData1) <- paste0("new_", rownames(colData))
 
-    # create DGEobj with GRange objet
-    # --- code
+    # checking mismatch rownames
+    expect_error({initDGEobj(counts     = counts,
+                             rowData    = rowData1,
+                             colData    = colData,
+                             level      = level,
+                             customAttr = customAttr)},
+                 regexp = "Elements 1, 2, 3, 4, 5, ... of rownames(counts) == rownames(rowData) are not true",
+                 fixed  = TRUE)
+
+    expect_error({initDGEobj(counts     = counts,
+                             rowData    = rowData,
+                             colData    = colData1,
+                             level      = level,
+                             customAttr = customAttr)},
+                 regexp = "Elements 1, 2, 3, 4, 5, ... of colnames(counts) == rownames(colData) are not true",
+                 fixed  = TRUE)
+
+    # cheking for numeric sampleIds
+    counts1 <- counts
+    rownames(colData1) <- as.character(1:nrow(colData1))
+    colnames(counts1)  <- as.character(1:nrow(colData1))
+
+    expect_error({initDGEobj(counts     = counts1,
+                             rowData    = rowData,
+                             colData    = colData1,
+                             level      = level,
+                             customAttr = customAttr)},
+                 regexp = paste0("It looks like you have numeric sample IDs (design rownames).",
+                                 "\nPlease supply a more specific sample identifier.",
+                                 " \nUse allowShortSampleIDs = TRUE to explicitily override this restriction"),
+                 fixed  = TRUE)
 
     # checking warning as GRange object is not available.
     expect_warning({test_DgeObj <- initDGEobj(counts     = counts,
@@ -22,6 +56,10 @@ test_that('init.R: initDGEobj()', {
                                               customAttr = customAttr)},
                    regexp = "Couldn't build a GRanges object!",
                    fixed  = TRUE)
+
+    # create DGEobj with GRange objet
+    # --- code
+
     # verifying class
     expect_s3_class(test_DgeObj, "DGEobj")
     expect_type(attributes(test_DgeObj), "list")
