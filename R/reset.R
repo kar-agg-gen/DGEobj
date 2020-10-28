@@ -32,18 +32,15 @@ resetDGEobj <- function(dgeObj, platformType){
     assertthat::assert_that("DGEobj" %in% class(dgeObj),
                             !is.null(attr(dgeObj, "level")))
 
-    if (is.null(attr(dgeObj, "PlatformType")))
+    if (!is.null(attr(dgeObj, "PlatformType"))) {
+        platformType <- tolower(attr(dgeObj, "PlatformType"))
+    } else {
         stop("Required attribute \"PlatformType\" is missing!  Must use platformType argument.")
+    }
 
     metaList <- getBaseType(dgeObj, "meta")[1:3]
-
-    if (!is.null(attr(dgeObj, "PlatformType")))
-        platformType <- tolower(attr(dgeObj, "PlatformType"))
-
-    if (tolower(platformType) %in% platform.rnaseq)
-        counts <- getItem(dgeObj, "counts_orig")
-
-    design <- getItem(dgeObj, "design_orig")
+    counts   <- getItem(dgeObj, "counts_orig")
+    design   <- getItem(dgeObj, "design_orig")
 
     if ("geneData_orig" %in% names(dgeObj)) {
         rowData <- getItem(dgeObj, "geneData_orig")
@@ -58,12 +55,11 @@ resetDGEobj <- function(dgeObj, platformType){
     }
 
     if (tolower(platformType) %in% platform.rnaseq) {
-        newObj <- initDGEobj(counts = dgeObj$counts_orig,
-                             rowData = rowData,
-                             colData = design,
-                             level = attr(dgeObj, "level"),
-                             DGEobjDef = attr(dgeObj, "objDef")
-        )
+        newObj <- initDGEobj(counts    = counts,
+                             rowData   = rowData,
+                             colData   = design,
+                             level     = attr(dgeObj, "level"),
+                             DGEobjDef = attr(dgeObj, "objDef"))
     } else {
         stop("The PlatformType attribute value was not recognized!")
     }
@@ -79,7 +75,6 @@ resetDGEobj <- function(dgeObj, platformType){
                           itemName = "effectiveLength",
                           itemType = "effectiveLength",
                           parent = "effectiveLength_orig")
-
     }
 
     excludeList <- list("names",
