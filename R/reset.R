@@ -11,8 +11,6 @@
 #' @keywords RNA-Seq; counts; low intensity
 #'
 #' @param dgeObj A DGEobj that we wish to extract original, un-filtered data from.
-#' @param platformType One of "RNA-Seq" or "Affymetrix". Only required if the
-#' platformType attribute is missing from the DGEobj.
 #'
 #' @return A DGEobj containing the original (unfiltered) data.
 #'
@@ -26,7 +24,7 @@
 #' @importFrom stringr str_c
 #'
 #' @export
-resetDGEobj <- function(dgeObj, platformType){
+resetDGEobj <- function(dgeObj){
     platform.rnaseq <- c("rna-seq", "rnaseq")
 
     assertthat::assert_that("DGEobj" %in% class(dgeObj),
@@ -35,7 +33,7 @@ resetDGEobj <- function(dgeObj, platformType){
     if (!is.null(attr(dgeObj, "PlatformType"))) {
         platformType <- tolower(attr(dgeObj, "PlatformType"))
     } else {
-        stop("Required attribute \"PlatformType\" is missing!  Must use platformType argument.")
+        stop("Required attribute \"PlatformType\" is missing.")
     }
 
     metaList <- getBaseType(dgeObj, "meta")[1:3]
