@@ -36,7 +36,6 @@ resetDGEobj <- function(dgeObj){
         stop("Required attribute \"PlatformType\" is missing.")
     }
 
-    metaList <- getBaseType(dgeObj, "meta")[1:3]
     counts   <- getItem(dgeObj, "counts_orig")
     design   <- getItem(dgeObj, "design_orig")
 
