@@ -28,14 +28,25 @@ test_that('reset.R: ', {
                  fixed  = TRUE)
 
     # testing valid object
-    names(test_DGEobj) <- c("counts_orig", "counts", "design_orig", "design", "isoformData_orig")
-    # Warning  expected as current object could not build the GRanges object!
+    for (matrix_name in  c("geneData_orig", "isoformData_orig", "exonData_orig", "proteinData_orig")) {
+        names(test_DGEobj) <- c( "counts_orig" , "counts", "design_orig" , "design", matrix_name)
+        # Warning  expected as current object could not build the GRanges object!
+        expect_warning({test_reset_DgeObj <- resetDGEobj(test_DGEobj)},
+                       regexp = "Couldn't build a GRanges object!",
+                       fixed  = TRUE)
+
+        expect_s3_class(test_reset_DgeObj, "DGEobj")
+    }
+
+    # testing DGEobj with effectiveLength_orig data
+    test_DGEobj <- addItem(test_DGEobj,
+                           item = test_DGEobj$proteinData_orig,
+                           itemName = "effectiveLength_orig",
+                           itemType = "effectiveLength_orig")
+    attr(test_DGEobj, "objDef")$type[["effectiveLength"]] <- "meta"
     expect_warning({test_reset_DgeObj <- resetDGEobj(test_DGEobj)},
                    regexp = "Couldn't build a GRanges object!",
                    fixed  = TRUE)
 
     expect_s3_class(test_reset_DgeObj, "DGEobj")
-
-    # testing DGEobj with effectiveLength_orig data
-    # -- code
 })
