@@ -88,16 +88,16 @@ test_that('addItem.R: addItems()', {
 
 test_that('addItem.R: incorrect usage', {
     expect_error(addItem(matrix(rep(0, 5), nrow = 5)),
-                 regexp = "!missing(item) is not TRUE",
+                 regexp = "Specify the DGEobj, item, itemName, and itemType. All are required.",
                  fixed  = TRUE)
     expect_error(addItem(NULL),
-                 regexp = "!missing(item) is not TRUE",
+                 regexp = "Specify the DGEobj, item, itemName, and itemType. All are required.",
                  fixed  = TRUE)
     expect_error(addItem(DGEobj),
-                 regexp = "!missing(item) is not TRUE",
+                 regexp = "Specify the DGEobj, item, itemName, and itemType. All are required.",
                  fixed  = TRUE)
     expect_error(addItem(DGEobj, item = 'mystring', itemName = 'teststring', itemType = 'badtype'),
-                 regexp = "`%in%`(x = itemType, table = names(attr(dgeObj, \"objDef\")$type)) is not TRUE",
+                 regexp = "The itemType must be one of the possible types defined in the DGEobj object definition. You can access possible types using names(attr(DGEobj, 'objDef')$type).",
                  fixed  = TRUE)
     expect_error(addItem(DGEobj, item = 'mystring', itemName = 'teststring', itemType = 'row'),
                  regexp = "Row basetypes must have rownames")
@@ -115,13 +115,13 @@ test_that('addItem.R: incorrect usage', {
                  regexp = "itemName (intensity_orig) already exists in DGEobj!",
                  fixed = TRUE)
     expect_error(addItems(NULL),
-                 regexp = "!missing(itemList) is not TRUE",
+                 regexp = "Specify the DGEobj, itemList, and itemTypes. All are required.",
                  fixed  = TRUE)
     expect_error(addItems(DGEobj),
-                 regexp = "!missing(itemList) is not TRUE",
+                 regexp = "Specify the DGEobj, itemList, and itemTypes. All are required.",
                  fixed  = TRUE)
     expect_error(addItems(DGEobj, itemList = list('teststring' = 'mystring'), itemTypes = list('badtype')),
-                 regexp = "`%in%`(x = itemType, table = names(attr(dgeObj, \"objDef\")$type)) is not TRUE",
+                 regexp = "The itemType must be one of the possible types defined in the DGEobj object definition. You can access possible types using names(attr(DGEobj, 'objDef')$type).",
                  fixed  = TRUE)
     expect_error(addItems(DGEobj, itemList = list('teststring' = 'mystring'), itemTypes = list('row')),
                  regexp = "Row basetypes must have rownames")
