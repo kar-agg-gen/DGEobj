@@ -139,6 +139,6 @@ test_that('addItem.R: incorrect usage', {
                           itemList = list("Cartoon" = "Fred Flintstone", "Historic" = "Abe Lincoln"),
                           itemTypes = list("meta", "meta"),
                           parents = list("p1")),
-                 regexp = "length(parents) not equal to length(itemList)",
+                 regexp = "The parents list must be of class 'list' and of the same length as the itemList.",
                  fixed  = TRUE)
 })

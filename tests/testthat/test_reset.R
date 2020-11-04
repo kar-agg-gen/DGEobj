@@ -5,7 +5,7 @@ test_that('reset.R: ', {
 
     # testing DGEobj without levels
     expect_error(resetDGEobj(DGEobj),
-                 regexp = "!is.null(attr(dgeObj, \"level\")) is not TRUE",
+                 regexp = "The DGEobj must have a 'level' attribute specified.",
                  fixed  = TRUE)
 
     # testing DGEobj without platformType
@@ -18,7 +18,7 @@ test_that('reset.R: ', {
     # testing DGEobj without counts_orig matrix
     test_DGEobj <- setAttributes(item = test_DGEobj, list("PlatformType" = "RNA-Seq"))
     expect_error(resetDGEobj(test_DGEobj),
-                 regexp = "`%in%`(x = itemName, table = names(dgeObj)) is not TRUE",
+                 regexp = "The requested itemName should be in the DGEobj. Use names(dgeObj) to see the available items.",
                  fixed  = TRUE)
 
     # testing DGEobj with unavailable data
