@@ -8,8 +8,7 @@ r:
 cache: packages
 bioc_packages:
   - GenomicRanges
-  - S4Vectors
-  - SummarizedExperiment
+  - edgeR
 r_packages:
   - covr
 after_success:
